@@ -1,8 +1,0 @@
-export { Select } from './Select'
-export { Slider } from './Slider'
-export { Toggle } from './Toggle'
-export { Button } from './Button'
-export { CodeBlock } from './CodeBlock'
-export { SectionTitle } from './SectionTitle'
-export { NumberInput } from './NumberInput'
-export { TextInput } from './TextInput'
