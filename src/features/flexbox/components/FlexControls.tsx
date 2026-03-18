@@ -1,28 +1,102 @@
-import React, { useState } from 'react'
-import { Trash2, ChevronDown, ChevronRight } from 'lucide-react'
-import { Select, Slider, Toggle, SectionTitle, NumberInput, TextInput, Button } from '@/components/ui'
-import { useFlexboxStore } from '../store/flexboxStore'
-import { useTranslation } from '@/hooks/useTranslation'
-import clsx from 'clsx'
+import React, { useState } from "react";
+import { Trash2, ChevronDown, ChevronRight } from "lucide-react";
+import {
+  Select,
+  Slider,
+  Toggle,
+  SectionTitle,
+  NumberInput,
+  TextInput,
+  Button,
+} from "@/components/ui";
+import { useFlexboxStore } from "../store/flexboxStore";
+import { useTranslation } from "@/hooks/useTranslation";
+import clsx from "clsx";
 
 const FLEX_PRESETS = [
-  { id: 'navbar',    label: 'Navbar',        state: { direction: 'row',    justifyContent: 'space-between', alignItems: 'center',  flexWrap: 'nowrap', gap: 16 } },
-  { id: 'centered',  label: 'Centered',      state: { direction: 'column', justifyContent: 'center',        alignItems: 'center',  flexWrap: 'nowrap', gap: 16 } },
-  { id: 'cardgrid',  label: 'Card Grid',     state: { direction: 'row',    justifyContent: 'flex-start',    alignItems: 'stretch', flexWrap: 'wrap',   gap: 16 } },
-  { id: 'sidebar',   label: 'Sidebar',       state: { direction: 'row',    justifyContent: 'flex-start',    alignItems: 'stretch', flexWrap: 'nowrap', gap: 0  } },
-  { id: 'holygrail', label: 'Holy Grail',    state: { direction: 'column', justifyContent: 'space-between', alignItems: 'stretch', flexWrap: 'nowrap', gap: 8  } },
-  { id: 'evenly',    label: 'Space Evenly',  state: { direction: 'row',    justifyContent: 'space-evenly',  alignItems: 'center',  flexWrap: 'nowrap', gap: 8  } },
-]
+  {
+    id: "navbar",
+    label: "Navbar",
+    state: {
+      direction: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      flexWrap: "nowrap",
+      gap: 16,
+    },
+  },
+  {
+    id: "centered",
+    label: "Centered",
+    state: {
+      direction: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      flexWrap: "nowrap",
+      gap: 16,
+    },
+  },
+  {
+    id: "cardgrid",
+    label: "Card Grid",
+    state: {
+      direction: "row",
+      justifyContent: "flex-start",
+      alignItems: "stretch",
+      flexWrap: "wrap",
+      gap: 16,
+    },
+  },
+  {
+    id: "sidebar",
+    label: "Sidebar",
+    state: {
+      direction: "row",
+      justifyContent: "flex-start",
+      alignItems: "stretch",
+      flexWrap: "nowrap",
+      gap: 0,
+    },
+  },
+  {
+    id: "holygrail",
+    label: "Holy Grail",
+    state: {
+      direction: "column",
+      justifyContent: "space-between",
+      alignItems: "stretch",
+      flexWrap: "nowrap",
+      gap: 8,
+    },
+  },
+  {
+    id: "evenly",
+    label: "Space Evenly",
+    state: {
+      direction: "row",
+      justifyContent: "space-evenly",
+      alignItems: "center",
+      flexWrap: "nowrap",
+      gap: 8,
+    },
+  },
+];
 
 interface AccordionSectionProps {
-  title: string
-  open: boolean
-  onToggle: () => void
-  children: React.ReactNode
-  badge?: string
+  title: string;
+  open: boolean;
+  onToggle: () => void;
+  children: React.ReactNode;
+  badge?: string;
 }
 
-function AccordionSection({ title, open, onToggle, children, badge }: AccordionSectionProps) {
+function AccordionSection({
+  title,
+  open,
+  onToggle,
+  children,
+  badge,
+}: AccordionSectionProps) {
   return (
     <div className="border-b border-slate-100 dark:border-slate-800 last:border-0">
       <button
@@ -39,72 +113,96 @@ function AccordionSection({ title, open, onToggle, children, badge }: AccordionS
             </span>
           )}
         </span>
-        {open
-          ? <ChevronDown size={12} className="text-slate-400 shrink-0" />
-          : <ChevronRight size={12} className="text-slate-400 shrink-0" />
-        }
+        {open ? (
+          <ChevronDown size={12} className="text-slate-400 shrink-0" />
+        ) : (
+          <ChevronRight size={12} className="text-slate-400 shrink-0" />
+        )}
       </button>
-      {open && (
-        <div className="px-3 pb-3 pt-1">
-          {children}
-        </div>
-      )}
+      {open && <div className="px-3 pb-3 pt-1">{children}</div>}
     </div>
-  )
+  );
 }
 
-export function FlexControls() {
-  const store = useFlexboxStore()
-  const { t } = useTranslation()
+interface FlexControlsProps {
+  mobile?: boolean;
+}
+
+export function FlexControls({ mobile = false }: FlexControlsProps) {
+  const store = useFlexboxStore();
+  const { t } = useTranslation();
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
     container: true,
     item: true,
     presets: true,
-  })
+  });
 
   const toggle = (key: string) =>
-    setOpenSections((s) => ({ ...s, [key]: !s[key] }))
+    setOpenSections((s) => ({ ...s, [key]: !s[key] }));
 
-  const selectedItem = store.items.find((i) => i.id === store.selectedId) ?? null
+  const selectedItem =
+    store.items.find((i) => i.id === store.selectedId) ?? null;
 
-  // Auto-open item section when something is selected
   React.useEffect(() => {
     if (selectedItem) {
-      setOpenSections((s) => ({ ...s, item: true }))
+      setOpenSections((s) => ({ ...s, item: true }));
     }
-  }, [selectedItem?.id])
+  }, [selectedItem?.id]);
 
   return (
-    <div className="w-52 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 overflow-y-auto shrink-0 flex flex-col">
-
-      {/* CONTAINER accordion */}
+    <div
+      className={clsx(
+        "bg-white dark:bg-slate-900 overflow-y-auto flex flex-col",
+        mobile
+          ? "w-full"
+          : "w-52 border-r border-slate-200 dark:border-slate-800 shrink-0",
+      )}
+    >
       <AccordionSection
         title="Container"
         open={openSections.container}
-        onToggle={() => toggle('container')}
+        onToggle={() => toggle("container")}
       >
         <Select
-          label={t('flexDirection')}
+          label={t("flexDirection")}
           value={store.direction}
-          options={['row', 'row-reverse', 'column', 'column-reverse'].map((v) => ({ value: v, label: v }))}
+          options={["row", "row-reverse", "column", "column-reverse"].map(
+            (v) => ({ value: v, label: v }),
+          )}
           onChange={(v) => store.set({ direction: v })}
         />
         <Select
-          label={t('justifyContent')}
+          label={t("justifyContent")}
           value={store.justifyContent}
-          options={['flex-start', 'center', 'flex-end', 'space-between', 'space-around', 'space-evenly'].map((v) => ({ value: v, label: v }))}
+          options={[
+            "flex-start",
+            "center",
+            "flex-end",
+            "space-between",
+            "space-around",
+            "space-evenly",
+          ].map((v) => ({ value: v, label: v }))}
           onChange={(v) => store.set({ justifyContent: v })}
         />
         <Select
-          label={t('alignItems')}
+          label={t("alignItems")}
           value={store.alignItems}
-          options={['stretch', 'flex-start', 'center', 'flex-end', 'baseline'].map((v) => ({ value: v, label: v }))}
+          options={[
+            "stretch",
+            "flex-start",
+            "center",
+            "flex-end",
+            "baseline",
+          ].map((v) => ({ value: v, label: v }))}
           onChange={(v) => store.set({ alignItems: v })}
         />
         <Select
-          label={t('flexWrap')}
+          label={t("flexWrap")}
           value={store.flexWrap}
-          options={['nowrap', 'wrap', 'wrap-reverse'].map((v) => ({ value: v, label: v }))}
+          options={["nowrap", "wrap", "wrap-reverse"].map((v) => ({
+            value: v,
+            label: v,
+          }))}
           onChange={(v) => store.set({ flexWrap: v })}
         />
         <Slider
@@ -116,68 +214,78 @@ export function FlexControls() {
           onChange={(v) => store.set({ gap: v })}
         />
         <Toggle
-          label={t('showAxes')}
+          label={t("showAxes")}
           value={store.showAxes}
           onChange={(v) => store.set({ showAxes: v })}
         />
         <Toggle
-          label={t('animate')}
+          label={t("animate")}
           value={store.animate}
           onChange={(v) => store.set({ animate: v })}
         />
       </AccordionSection>
 
-      {/* SELECTED ITEM accordion — only visible when something is selected */}
       {selectedItem && (
         <AccordionSection
           title="Selected Item"
           badge={`#${selectedItem.id}`}
           open={openSections.item}
-          onToggle={() => toggle('item')}
+          onToggle={() => toggle("item")}
         >
           <NumberInput
-            label={t('flexGrow')}
+            label={t("flexGrow")}
             value={selectedItem.grow}
-            onChange={(v) => store.setItem(selectedItem.id, { grow: Number(v) })}
+            onChange={(v) =>
+              store.setItem(selectedItem.id, { grow: Number(v) })
+            }
           />
           <NumberInput
-            label={t('flexShrink')}
+            label={t("flexShrink")}
             value={selectedItem.shrink}
-            onChange={(v) => store.setItem(selectedItem.id, { shrink: Number(v) })}
+            onChange={(v) =>
+              store.setItem(selectedItem.id, { shrink: Number(v) })
+            }
           />
           <TextInput
-            label={t('flexBasis')}
+            label={t("flexBasis")}
             value={selectedItem.basis}
             onChange={(v) => store.setItem(selectedItem.id, { basis: v })}
           />
           <NumberInput
-            label={t('order')}
+            label={t("order")}
             value={selectedItem.order}
-            onChange={(v) => store.setItem(selectedItem.id, { order: Number(v) })}
+            onChange={(v) =>
+              store.setItem(selectedItem.id, { order: Number(v) })
+            }
           />
           <Select
-            label={t('alignSelf')}
+            label={t("alignSelf")}
             value={selectedItem.alignSelf}
-            options={['auto', 'stretch', 'flex-start', 'center', 'flex-end', 'baseline'].map((v) => ({ value: v, label: v }))}
+            options={[
+              "auto",
+              "stretch",
+              "flex-start",
+              "center",
+              "flex-end",
+              "baseline",
+            ].map((v) => ({ value: v, label: v }))}
             onChange={(v) => store.setItem(selectedItem.id, { alignSelf: v })}
           />
-          {/* Remove button — only visible when item is selected */}
           <Button
             variant="soft-danger"
             size="sm"
             onClick={() => store.removeItem(selectedItem.id)}
             className="w-full justify-center mt-2"
           >
-            <Trash2 size={11} /> {t('removeItem')}
+            <Trash2 size={11} /> {t("removeItem")}
           </Button>
         </AccordionSection>
       )}
 
-      {/* PRESETS accordion */}
       <AccordionSection
         title="Presets"
         open={openSections.presets}
-        onToggle={() => toggle('presets')}
+        onToggle={() => toggle("presets")}
       >
         <div className="flex flex-col gap-1">
           {FLEX_PRESETS.map((preset) => (
@@ -199,5 +307,5 @@ export function FlexControls() {
         </div>
       </AccordionSection>
     </div>
-  )
+  );
 }
