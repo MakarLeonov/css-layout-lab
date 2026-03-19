@@ -1,9 +1,14 @@
-import React from 'react'
-import { CodeBlock, SectionTitle } from '@/components/ui'
-import { useGridStore } from '../store/gridStore'
+import React from "react";
+import { CodeBlock, SectionTitle } from "@/components/ui";
+import { useGridStore } from "../store/gridStore";
+import clsx from "clsx";
 
-export function GridCSSPanel() {
-  const store = useGridStore()
+interface GridCSSPanelProps {
+  mobile?: boolean;
+}
+
+export function GridCSSPanel({ mobile = false }: GridCSSPanelProps) {
+  const store = useGridStore();
 
   const css = `.container {
   display: grid;
@@ -12,12 +17,19 @@ export function GridCSSPanel() {
   gap: ${store.gap}px;
   justify-items: ${store.justifyItems};
   align-items: ${store.alignItems};
-}`
+}`;
 
   return (
-    <div className="w-64 bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 flex flex-col shrink-0 p-3">
+    <div
+      className={clsx(
+        "bg-white dark:bg-slate-900 flex flex-col p-3",
+        mobile
+          ? "w-full"
+          : "w-64 border-l border-slate-200 dark:border-slate-800 shrink-0",
+      )}
+    >
       <SectionTitle>Generated CSS</SectionTitle>
       <CodeBlock code={css} />
     </div>
-  )
+  );
 }
