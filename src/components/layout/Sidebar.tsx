@@ -37,8 +37,8 @@ export function Sidebar() {
           "w-full flex items-center gap-2 px-3 py-2 text-[12px] font-mono font-medium",
           "border-l-2 transition-all duration-150 text-left",
           active
-            ? "border-brand-600 bg-brand-50 dark:bg-brand-950/30 text-brand-700 dark:text-brand-400 font-bold"
-            : "border-transparent text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200",
+            ? "border-brand-600 bg-brand-50 dark:bg-brand-950/30 text-brand-700 dark:text-brand-440 font-bold"
+            : "border-transparent text-slate-600 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200",
         )}
       >
         {label}
